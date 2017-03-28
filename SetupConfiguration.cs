@@ -41,7 +41,7 @@ namespace Microsoft.VisualStudio.Setup.Samples
             installString.Append("vs_enterprise.exe ");
 
             var installPath = instance.GetInstallationPath();
-            installString.Append($"--installPath \"{installPath}\" ");
+            installString.AppendLine($"--installPath \"{installPath}\" \\");
 
             if ((state & InstanceState.Registered) == InstanceState.Registered)
             {
@@ -49,16 +49,16 @@ namespace Microsoft.VisualStudio.Setup.Samples
                 var workloads = GetPackages(instance2.GetPackages(), "Workload");
                 foreach (var workload in workloads)
                 {
-                    installString.Append($"--add {workload} ");
+                    installString.AppendLine($"   --add {workload} \\");
                 }
 
                 var components = GetPackages(instance2.GetPackages(), "Component");
                 foreach (var component in components)
                 {
-                    installString.Append($"--add {component} ");
+                    installString.AppendLine($"   --add {component} \\");
                 }
 
-                return installString.ToString();
+                return installString.ToString().TrimEnd('\\', '\r', '\n');
 
             }
             else
