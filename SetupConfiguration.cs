@@ -36,20 +36,26 @@ namespace Microsoft.VisualStudio.Setup.Samples
             var state = instance2.GetState();
             var installString = new StringBuilder();
 
+            // Confusingly, while modify, uninstall, update are commands, the install command is specified 
+            // by leaving the command parameter blank
+            installString.Append("vs_enterprise.exe ");
+
+            var installPath = instance.GetInstallationPath();
+            installString.Append($"--installPath \"{installPath}\" ");
+
             if ((state & InstanceState.Registered) == InstanceState.Registered)
             {
-                installString.AppendLine("Registered instance " + instance.GetInstanceId());
-
+                
                 var workloads = GetPackages(instance2.GetPackages(), "Workload");
                 foreach (var workload in workloads)
                 {
-                    installString.AppendLine($"--add {workload}");
+                    installString.Append($"--add {workload} ");
                 }
 
                 var components = GetPackages(instance2.GetPackages(), "Component");
                 foreach (var component in components)
                 {
-                    installString.AppendLine($"--add {component}");
+                    installString.Append($"--add {component} ");
                 }
 
                 return installString.ToString();
